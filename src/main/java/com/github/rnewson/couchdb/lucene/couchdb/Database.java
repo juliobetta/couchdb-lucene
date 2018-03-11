@@ -99,7 +99,7 @@ public final class Database {
 
     public UpdateSequence getLastSequence() throws IOException, JSONException {
         final JSONObject result = new JSONObject(HttpUtils.get(httpClient, url
-                + "_changes?limit=0&descending=true"));
+                + "_changes"));
         return UpdateSequence.parseUpdateSequence(result.getString("last_seq"));
     }
 
