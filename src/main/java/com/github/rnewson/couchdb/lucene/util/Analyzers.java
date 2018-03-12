@@ -38,6 +38,7 @@ import org.apache.lucene.analysis.standard.ClassicAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.th.ThaiAnalyzer;
 import org.apache.lucene.analysis.ngram.NGramTokenFilter;
+import org.apache.lucene.analysis.pt.PortugueseAnalyzer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,6 +61,17 @@ public enum Analyzers {
         public Analyzer newAnalyzer(final String args) {
             return new BrazilianAnalyzer();
         }
+        @Override
+        public Analyzer newAnalyzer(final JSONObject args) {
+            return new BrazilianAnalyzer();
+        }
+    },
+    PORTUGUESE {
+        @Override
+        public Analyzer newAnalyzer(final String args) {
+            return new PortugueseAnalyzer();
+        }
+
         @Override
         public Analyzer newAnalyzer(final JSONObject args) {
             return new BrazilianAnalyzer();
@@ -282,7 +294,7 @@ public enum Analyzers {
     public static Analyzer fromSpec(String str) throws JSONException {
         if (str == null) {
             return getAnalyzer(Constants.DEFAULT_ANALYZER);
-        } 
+        }
 
         if (str.startsWith("{")) {
             try {
@@ -405,13 +417,13 @@ public enum Analyzers {
     }
 
     /**
-     * Parse an analyzer constructor parameter spec. 
-     * 
+     * Parse an analyzer constructor parameter spec.
+     *
      * Each param spec looks like:
-     * 
+     *
      * <pre>{ "name": &lt;a name>, "type": &lt;oneof: set, bool, int, file, string>, "value": &lt;value> }</pre>
-     * 
-     * The name serves to document the purpose of the parameter. Values of type <code>set</code> are JSON arrays and 
+     *
+     * The name serves to document the purpose of the parameter. Values of type <code>set</code> are JSON arrays and
      * are used to represent lucene CharArraySets such as for stop words in StandardAnalyzer
      *
      * @param param json object specifying an analyzer parameter
@@ -478,7 +490,7 @@ public enum Analyzers {
 
             boolean b = param.optBoolean("value");
             return new ParamSpec(name, b, boolean.class);
-        
+
         default:
             // there was no match
             logger.error("Unknown parameter type: " + type + " for param: " + name + " with value: " + value);
