@@ -156,34 +156,30 @@ public final class DatabaseIndexer implements Runnable, ResponseHandler<Void> {
         }
 
         private void blockForLatest(final boolean staleOk) throws IOException, JSONException {
-            if (staleOk) {
-                return;
-            }
-            final UpdateSequence latest = database.getLastSequence();
-            synchronized (this) {
-                long timeout = getSearchTimeout();
-                while (pending_seq.isEarlierThan(latest)) {
-                    try {
-                        final long start = System.currentTimeMillis();
-                        wait(timeout);
-                        timeout -= (System.currentTimeMillis() - start);
-                        if (timeout <= 0) {
-                            throw new IOException("Search timed out.");
-                        }
-                    } catch (final InterruptedException e) {
-                        throw new IOException("Search timed out.");
-                    }
-                }
-            }
+            return;
+            // if (staleOk) {
+            //     return;
+            // }
+            // final UpdateSequence latest = database.getLastSequence();
+            // synchronized (this) {
+            //     long timeout = getSearchTimeout();
+            //     while (pending_seq.isEarlierThan(latest)) {
+            //         try {
+            //             final long start = System.currentTimeMillis();
+            //             wait(timeout);
+            //             timeout -= (System.currentTimeMillis() - start);
+            //             if (timeout <= 0) {
+            //                 throw new IOException("Search timed out.");
+            //             }
+            //         } catch (final InterruptedException e) {
+            //             throw new IOException("Search timed out.");
+            //         }
+            //     }
+            // }
         }
 
-        private synchronized void setPendingSequence(final UpdateSequence seq)
-            throws IOException, JSONException
-        {
-            final UpdateSequence latest = database.getLastSequence();
-            if(!seq.isLaterThan(latest)) {
-                pending_seq = seq;
-            }
+        private synchronized void setPendingSequence(final UpdateSequence seq) {
+            pending_seq = seq;
             notifyAll();
         }
 
