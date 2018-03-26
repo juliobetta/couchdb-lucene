@@ -177,8 +177,13 @@ public final class DatabaseIndexer implements Runnable, ResponseHandler<Void> {
             }
         }
 
-        private synchronized void setPendingSequence(final UpdateSequence seq) {
-            pending_seq = seq;
+        private synchronized void setPendingSequence(final UpdateSequence seq)
+            throws IOException, JSONException
+        {
+            final UpdateSequence latest = database.getLastSequence();
+            if(!seq.isLaterThan(latest)) {
+                pending_seq = seq;
+            }
             notifyAll();
         }
 

@@ -116,7 +116,7 @@ public final class Database {
         if (timeout > -1) {
             uri = url + "_changes?feed=continuous&timeout="+timeout+"&include_docs=true";
         } else {
-            uri = url + "_changes?feed=continuous&seq_interval=100&heartbeat=10000&include_docs=true";
+            uri = url + "_changes?feed=continuous&heartbeat=15000&include_docs=true";
         }
         return new HttpGet(since.appendSince(uri));
     }
